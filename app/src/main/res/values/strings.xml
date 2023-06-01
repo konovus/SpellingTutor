@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SpellingNotify</string>
+    <string name="spelling_notify">Spelling Notify</string>
+    <string name="settings">Settings</string>
+    <string name="go_back">go back</string>
+    <string name="exercise">Exercise</string>
+    <string name="post_notifications_permission_description">This app needs to post notifications, in order to function properly.</string>
+    <string name="post_notifications_permanently_declined_description">"It seems that you have permanently declined to post notifications, you can go to app settings to grant it.</string>
+</resources>
