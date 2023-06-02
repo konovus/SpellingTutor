@@ -2,9 +2,7 @@ package com.example.spellingnotify.presentation.ui.settingsScreen
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.os.Build
-import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -17,16 +15,16 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.spellingnotify.R
 import com.example.spellingnotify.domain.filters.WordsFilter
-import com.example.spellingnotify.presentation.ui.settingsScreen.components.NOTIFICATION_PERMISSION
-import com.example.spellingnotify.presentation.ui.settingsScreen.components.PermissionDialog
-import com.example.spellingnotify.presentation.ui.settingsScreen.components.isPermissionGranted
-import com.example.spellingnotify.presentation.ui.settingsScreen.components.permissionLauncher
 import com.example.spellingnotify.presentation.ui.openAppSettings
 import com.example.spellingnotify.presentation.ui.settingsScreen.components.ArchivedWordsDialogContent
+import com.example.spellingnotify.presentation.ui.settingsScreen.components.NOTIFICATION_PERMISSION
+import com.example.spellingnotify.presentation.ui.settingsScreen.components.PermissionDialog
 import com.example.spellingnotify.presentation.ui.settingsScreen.components.SettingsCustomOption
 import com.example.spellingnotify.presentation.ui.settingsScreen.components.SettingsOptionDialog
 import com.example.spellingnotify.presentation.ui.settingsScreen.components.TimeIntervalDialogContent
 import com.example.spellingnotify.presentation.ui.settingsScreen.components.WordsFiltersDialogContent
+import com.example.spellingnotify.presentation.ui.settingsScreen.components.isPermissionGranted
+import com.example.spellingnotify.presentation.ui.settingsScreen.components.permissionLauncher
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -47,9 +45,6 @@ fun SettingsScreen(
         else shouldShowPermissionDialog = true
     }
 
-    if (shouldShowPermissionDialog)
-        ShowPermissionDialog(context, shouldShowPermissionDialog, permissionLauncher)
-
     if (viewModel.settingsState.value.isLearningIntervalsDialogShown)
         ShowLearningIntervalsDialog(viewModel)
 
@@ -62,8 +57,26 @@ fun SettingsScreen(
     if (viewModel.settingsState.value.isArchivedWordsDialogShown)
         ShowArchivedWordsDialog(viewModel)
 
+    if (shouldShowPermissionDialog)
+        PermissionDialog(
+            description = stringResource(R.string.post_notifications_permission_description),
+            permanentlyDeclinedDescription = stringResource(R.string.post_notifications_permanently_declined_description),
+            isPermanentlyDeclined = !(context as Activity).shouldShowRequestPermissionRationale(
+                NOTIFICATION_PERMISSION
+            ),
+            onDismiss = { shouldShowPermissionDialog = false },
+            onOkClick = {
+                permissionLauncher.launch(NOTIFICATION_PERMISSION)
+                shouldShowPermissionDialog = false
+            },
+            onGoToAppSettingsClick = {
+                shouldShowPermissionDialog = false
+                context.openAppSettings()
+            }
+        )
+
     Column {
-        Spacer(modifier = Modifier.height(96.dp))
+        Spacer(modifier = modifier.height(96.dp))
         SettingsCustomOption(
             title = "Time interval for Learning",
             subTitleList = viewModel.settingsState.value.learningIntervalsList,
@@ -226,30 +239,6 @@ private fun ShowLearningIntervalsDialog(viewModel: SettingsViewModel) {
     )
 }
 
-@Composable
-private fun ShowPermissionDialog(
-    context: Context,
-    shouldShowPermissionDialog: Boolean,
-    permissionLauncher: ManagedActivityResultLauncher<String, Boolean>
-) {
-    var shouldShowPermissionDialog1 = shouldShowPermissionDialog
-    PermissionDialog(
-        description = stringResource(R.string.post_notifications_permission_description),
-        permanentlyDeclinedDescription = stringResource(R.string.post_notifications_permanently_declined_description),
-        isPermanentlyDeclined = !(context as Activity).shouldShowRequestPermissionRationale(
-            NOTIFICATION_PERMISSION
-        ),
-        onDismiss = { shouldShowPermissionDialog1 = false },
-        onOkClick = {
-            permissionLauncher.launch(NOTIFICATION_PERMISSION)
-            shouldShowPermissionDialog1 = false
-        },
-        onGoToAppSettingsClick = {
-            shouldShowPermissionDialog1 = false
-            context.openAppSettings()
-        }
-    )
-}
 
 enum class PermissionRequiredSetting {
     LEARNING, EXERCISING

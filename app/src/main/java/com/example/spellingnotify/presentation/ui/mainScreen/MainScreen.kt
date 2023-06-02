@@ -11,8 +11,6 @@ import androidx.compose.material3.*
 import androidx.compose.material3.DismissValue.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,26 +48,18 @@ fun MainScreen(
             items = viewModel.state.value.wordModels,
             key = { _, wordModel -> wordModel.word }
         ) { index, wordModel ->
-            val currentWord by rememberUpdatedState(wordModel)
             val dismissState = rememberDismissState(
                 confirmValueChange = {
                     when (it) {
                         DismissedToEnd -> {
-
                             viewModel.onEvent(MainScreenActions.OnSwipeWord(wordModel.word))
                             true
                         }
-
-                        DismissedToStart -> {
-                            true
-                        }
-
-                        Default -> {
-                            true
-                        }
+                        else -> true
                     }
                 }
             )
+
             SwipeToDismiss(
                 state = dismissState,
                 modifier = Modifier
