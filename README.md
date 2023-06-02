@@ -1,5 +1,6 @@
 # SpellingTutor
-This repository houses a simple Kotlin app designed to help you learn to spell words that contain doubled letters.  
+This repository houses a simple Kotlin app designed to help you learn to spell words that contain doubled letters  
+with a mini quiz-game and notifications.  
 The app utilizes Jetpack Compose for the user interface, offering a modern and intuitive user experience.  
 The project adheres to Clean architecture principles, implementing the MVVM (Model-View-ViewModel) pattern to ensure a separation of concerns and maintainability.  
 Feel free to explore the codebase.
