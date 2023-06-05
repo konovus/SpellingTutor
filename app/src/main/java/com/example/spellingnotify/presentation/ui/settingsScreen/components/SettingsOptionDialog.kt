@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.example.spellingnotify.core.util.TestTags.DIALOG_WRAPPER
+import com.example.spellingnotify.core.util.TestTags.SETTING_OPTION_DIALOG
 
 
 @Composable
@@ -40,7 +40,7 @@ fun SettingsOptionDialog(
                 .clip(RoundedCornerShape(8.dp))
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(16.dp)
-                .testTag(DIALOG_WRAPPER),
+                .testTag(SETTING_OPTION_DIALOG),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(

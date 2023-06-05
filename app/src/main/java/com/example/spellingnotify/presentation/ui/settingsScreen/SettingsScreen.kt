@@ -123,7 +123,7 @@ fun SettingsScreen(
         )
         Divider(Modifier.padding(vertical = 30.dp))
         SettingsCustomOption(
-            title = "Archived words list",
+            title = "Archived words",
             subTitleList =
             if (viewModel.settingsState.value.archivedWordsList.size == 1)
                 listOf(viewModel.settingsState.value.archivedWordsList.first())

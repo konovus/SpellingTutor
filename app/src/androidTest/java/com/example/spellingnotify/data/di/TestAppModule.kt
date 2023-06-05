@@ -6,7 +6,7 @@ import androidx.annotation.RequiresApi
 import com.example.spellingnotify.data.api.DictionaryApi
 import com.example.spellingnotify.data.notification.NotificationHelper
 import com.example.spellingnotify.data.notification.NotificationManagerImpl
-import com.example.spellingnotify.data.preferences.SettingsManagerImpl
+import com.example.spellingnotify.data.preferences.FakeSettingManager
 import com.example.spellingnotify.data.repository.MainRepositoryImpl
 import com.example.spellingnotify.domain.notification.NotificationManager
 import com.example.spellingnotify.domain.repository.MainRepository
@@ -26,8 +26,8 @@ class TestAppModule {
 
     @Singleton
     @Provides
-    fun provideSettingsManager(app: Application): SettingsManager {
-        return SettingsManagerImpl(app)
+    fun provideSettingsManager(): SettingsManager {
+        return FakeSettingManager()
     }
 
     @Singleton

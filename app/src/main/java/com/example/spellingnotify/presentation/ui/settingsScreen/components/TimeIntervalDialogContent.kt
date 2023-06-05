@@ -1,6 +1,5 @@
 package com.example.spellingnotify.presentation.ui.settingsScreen.components
 
-import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -16,7 +15,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalMinimumTouchTargetEnforcement
+import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -26,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.spellingnotify.data.di.TAG
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.clock.ClockDialog
 import com.maxkeppeler.sheets.clock.models.ClockSelection
@@ -80,7 +78,7 @@ fun TimeIntervalDialogContent(
                         .padding(6.dp)
                 )
                 Spacer(modifier = Modifier.width(60.dp))
-                CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {
+                CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
                     IconButton(onClick = {
                         intervalIndex = index
                         clockState.show()
