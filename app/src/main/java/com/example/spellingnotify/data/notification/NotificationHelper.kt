@@ -14,7 +14,8 @@ import com.example.spellingnotify.R
 import com.example.spellingnotify.data.di.TAG
 import com.example.spellingnotify.domain.repository.MainRepository
 import com.example.spellingnotify.domain.usecases.MainFilterUseCase
-import com.example.spellingnotify.domain.utils.SettingsManager
+import com.example.spellingnotify.presentation.redux.AppState
+import com.example.spellingnotify.presentation.redux.Store
 import com.example.spellingnotify.presentation.utils.distinctChars
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -25,20 +26,19 @@ import javax.inject.Inject
 @OptIn(DelicateCoroutinesApi::class)
 class NotificationHelper @Inject constructor(
     private val context: Context,
-    private val settingsManager: SettingsManager,
+    private val store: Store<AppState>,
     private val repository: MainRepository,
     private val mainFilterUseCase: MainFilterUseCase
 ) {
 
-    lateinit var word: String
     private val notificationManager =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
 
     enum class ActionType {
         REPLY,
         SHOW_ANSWER,
-        NEXT
+        NEXT,
+        ARCHIVE
     }
 
     companion object {
@@ -56,12 +56,16 @@ class NotificationHelper @Inject constructor(
 
         notificationManager.createNotificationChannel(notificationChannel)
 
+        val word = mainFilterUseCase().random().word
+        Log.i(TAG, "createLearningNotification: $word")
         val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID_LEARNING)
             .setContentTitle("Learning")
-            .setContentText("Word of the day: ${mainFilterUseCase().random().word}")
+            .setContentText("Word of the day: $word")
             .setSmallIcon(R.drawable.ic_launcher_background)
+            .addAction(getArchiveAction())
 
         notificationManager.notify(ID_LEARNING, notificationBuilder.build())
+        store.update { it.copy(wordToLearn = word) }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -70,7 +74,8 @@ class NotificationHelper @Inject constructor(
             NotificationChannel(CHANNEL_ID_EXERCISING, "exercising", NotificationManager.IMPORTANCE_HIGH)
         notificationManager.createNotificationChannel(notificationChannel)
 
-        word = mainFilterUseCase().random().word
+        val word = mainFilterUseCase().random().word
+        Log.i(TAG, "createExercisingNotification: $word")
         var definition = "No definition found"
         val response = repository.fetchWordData(word)
         if (response.data != null)
@@ -87,7 +92,7 @@ class NotificationHelper @Inject constructor(
             .addAction(getNextAction())
 
         notificationManager.notify(ID_EXERCISING, notificationBuilder.build())
-        settingsManager.saveStringSetting(SettingsManager.WORD_TO_GUESS, word)
+        store.update { it.copy(wordToGuess = word) }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -96,7 +101,7 @@ class NotificationHelper @Inject constructor(
             NotificationChannel(CHANNEL_ID_EXERCISING, "exercising", NotificationManager.IMPORTANCE_HIGH)
         notificationManager.createNotificationChannel(notificationChannel)
 
-        word = settingsManager.readStringSetting(SettingsManager.WORD_TO_GUESS)
+        val word = store.state.value.wordToGuess
         var definition = "No definition found"
         val response = repository.fetchWordData(word)
         if (response.data != null)
@@ -113,12 +118,11 @@ class NotificationHelper @Inject constructor(
             .addAction(getNextAction())
 
         notificationManager.notify(ID_EXERCISING, notificationBuilder.build())
-        settingsManager.saveStringSetting(SettingsManager.WORD_TO_GUESS, word)
+        store.update { it.copy(wordToGuess = word) }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     fun createCorrectExercisingNotification() = GlobalScope.launch {
-
         val notificationChannel =
             NotificationChannel(CHANNEL_ID_EXERCISING, "exercising", NotificationManager.IMPORTANCE_HIGH)
         notificationManager.createNotificationChannel(notificationChannel)
@@ -131,8 +135,24 @@ class NotificationHelper @Inject constructor(
         notificationManager.notify(ID_EXERCISING, notificationBuilder.build())
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
+    fun createArchivedNotification() = GlobalScope.launch {
+        val word = store.state.value.wordToLearn
+
+        val notificationChannel =
+            NotificationChannel(CHANNEL_ID_LEARNING, "archive", NotificationManager.IMPORTANCE_HIGH)
+        notificationManager.createNotificationChannel(notificationChannel)
+
+
+        val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID_LEARNING)
+            .setContentTitle("Word: $word was archived")
+            .setSmallIcon(R.drawable.ic_launcher_background)
+
+        notificationManager.notify(ID_LEARNING, notificationBuilder.build())
+    }
+
     fun createExercisingNotificationWithAnswer() = GlobalScope.launch {
-        word = settingsManager.readStringSetting(SettingsManager.WORD_TO_GUESS)
+        val word = store.state.value.wordToGuess
 
         val notificationChannel =
             NotificationChannel(CHANNEL_ID_EXERCISING, "exercising", NotificationManager.IMPORTANCE_HIGH)
@@ -176,6 +196,13 @@ class NotificationHelper @Inject constructor(
         return NotificationCompat.Action.Builder(
             null,
             "Next word", getResultPendingIntent(ActionType.NEXT))
+            .build()
+    }
+
+    private fun getArchiveAction(): NotificationCompat.Action {
+        return NotificationCompat.Action.Builder(
+            null,
+            "Archive", getResultPendingIntent(ActionType.ARCHIVE))
             .build()
     }
 

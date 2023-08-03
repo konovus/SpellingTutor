@@ -1,18 +1,28 @@
 package com.example.spellingnotify.presentation.ui.mainScreen
 
-import android.annotation.SuppressLint
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.view.MotionEvent.ACTION_DOWN
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.*
-import androidx.compose.material3.DismissValue.*
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FractionalThreshold
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.SwipeToDismiss
+import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -20,8 +30,9 @@ import com.example.spellingnotify.presentation.ui.mainScreen.components.SwipeBac
 import com.example.spellingnotify.presentation.ui.mainScreen.components.WordModelRow
 import com.example.spellingnotify.presentation.utils.observeWithLifecycle
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn( ExperimentalFoundationApi::class, ExperimentalMaterialApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
@@ -35,6 +46,9 @@ fun MainScreen(
     LaunchedEffect(key1 = true) {
         viewModel.filterList()
     }
+    val scope = rememberCoroutineScope()
+    val touchPositionsX = mutableListOf<Float>()
+    val touchPositionsY = mutableListOf<Float>()
 
     LazyColumn(
         state = mainListState,
@@ -42,28 +56,42 @@ fun MainScreen(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(vertical = 72.dp)
-    ) {
+        contentPadding = PaddingValues(bottom = 72.dp),
+
+        ) {
         itemsIndexed(
             items = viewModel.state.value.wordModels,
             key = { _, wordModel -> wordModel.word }
         ) { index, wordModel ->
             val dismissState = rememberDismissState(
-                confirmValueChange = {
+                confirmStateChange = {
                     when (it) {
-                        DismissedToEnd -> {
-                            viewModel.onEvent(MainScreenActions.OnSwipeWord(wordModel.word))
-                            true
+                        DismissValue.DismissedToEnd -> {
+                            if (touchPositionsX.last() - touchPositionsX.first() > 450 &&
+                                    touchPositionsY.last() - touchPositionsY.first() < 20) {
+                                viewModel.onEvent(MainScreenActions.OnSwipeWord(wordModel.word))
+                                true
+                            } else false
                         }
-                        else -> true
+                        else -> false
                     }
                 }
             )
-
             SwipeToDismiss(
+                dismissThresholds = {
+                    FractionalThreshold(0.40f)
+                },
                 state = dismissState,
                 modifier = Modifier
-                    .animateItemPlacement(),
+                    .animateItemPlacement()
+                    .motionEventSpy {
+                        if (it.action == ACTION_DOWN) {
+                            touchPositionsX.clear()
+                            touchPositionsY.clear()
+                        }
+                        touchPositionsY.add(it.y)
+                        touchPositionsX.add(it.x)
+                    },
                 background = {
                     SwipeBackground(dismissState = dismissState)
                 },
@@ -72,17 +100,18 @@ fun MainScreen(
                         index = index,
                         bgColors = viewModel.state.value.bgColors,
                         onWordClick = { viewModel.getWordData(wordModel.word) },
-                        wordModel = wordModel
+                        wordModel = wordModel,
+                        isLoading = viewModel.state.value.isLoading && viewModel.state.value.currentWordClicked == wordModel.word,
+                        isOpen = viewModel.state.value.wordsClicked.contains(wordModel.word)
                     )
                 },
-                directions =
-                if (mainListState.isScrollInProgress)
-                    emptySet() else setOf(DismissDirection.StartToEnd),
+                directions = setOf(DismissDirection.StartToEnd)
             )
         }
     }
 
 }
+
 
 @Preview
 @Composable

@@ -7,15 +7,19 @@ import androidx.lifecycle.viewModelScope
 import com.example.spellingnotify.domain.filters.WordsFilter
 import com.example.spellingnotify.domain.notification.NotificationManager
 import com.example.spellingnotify.domain.utils.SettingsManager
+import com.example.spellingnotify.presentation.redux.AppState
+import com.example.spellingnotify.presentation.redux.Store
 import com.example.spellingnotify.presentation.utils.SettingTimeInterval
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val settingsManager: SettingsManager,
-    private val notificationManager: NotificationManager
+    private val notificationManager: NotificationManager,
+    private val store: Store<AppState>,
 ) : ViewModel() {
 
     var settingsState = mutableStateOf(SettingsState())
@@ -39,7 +43,16 @@ class SettingsViewModel @Inject constructor(
                 wordsFiltersListPreliminary = wordsFiltersList.toMutableStateList(),
                 archivedWordsList = archivedWordsList
             )
+            store.state.collectLatest { appState ->
+                if (!appState.updateArchivedWords) return@collectLatest
+                settingsState.value = settingsState.value.copy(
+                    archivedWordsList = appState.archivedWordsList,
+                    archivedWordsListPreliminary = appState.archivedWordsList,
+                )
+                store.update { it.copy(updateArchivedWords = false) }
+            }
         }
+
     }
 
     fun onAction(action: SettingsActions) = viewModelScope.launch {

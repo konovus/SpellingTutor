@@ -1,20 +1,21 @@
 package com.example.spellingnotify.data.notification
 
-import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.work.Data
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.spellingnotify.domain.notification.NotificationManager
+import com.example.spellingnotify.domain.notification.NotificationManager.NotificationData
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 class NotificationManagerImpl(
     private val context: Context
-    ) : NotificationManager {
+) : NotificationManager {
 
-    @SuppressLint("RestrictedApi")
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun setNotification(
         hours: Int,
         minutes: Int,
@@ -22,18 +23,21 @@ class NotificationManagerImpl(
     ) {
 
         val initialDelay = calculateInitialDelay(hours, minutes)
-        val data = Data(mapOf("type" to type))
+        val data = Data.Builder().putAll(
+            mapOf(
+                NotificationData.TYPE.name to type.toString(),
+                NotificationData.HOURS.name to hours,
+                NotificationData.MINUTES.name to minutes
+            )
+        ).build()
 
-        val request = PeriodicWorkRequestBuilder<NotificationWorker>(1, TimeUnit.DAYS)
+        val request = OneTimeWorkRequestBuilder<NotificationWorker>()
             .setInputData(data)
+            .addTag("$hours$minutes$type")
             .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
             .build()
 
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            "$hours$minutes$type",
-            ExistingPeriodicWorkPolicy.UPDATE,
-            request
-        )
+        WorkManager.getInstance(context).enqueue(request)
     }
 
     override fun cancelNotification(
@@ -42,8 +46,8 @@ class NotificationManagerImpl(
         type: NotificationManager.NotificationType
     ) {
 
-    WorkManager.getInstance(context).cancelUniqueWork("$hours$minutes$type")
-}
+        WorkManager.getInstance(context).cancelAllWorkByTag("$hours$minutes$type")
+    }
 
     private fun calculateInitialDelay(hours: Int, minutes: Int): Long {
         val now = Calendar.getInstance()

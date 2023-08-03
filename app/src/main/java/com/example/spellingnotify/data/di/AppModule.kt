@@ -12,6 +12,8 @@ import com.example.spellingnotify.domain.notification.NotificationManager
 import com.example.spellingnotify.domain.repository.MainRepository
 import com.example.spellingnotify.domain.usecases.MainFilterUseCase
 import com.example.spellingnotify.domain.utils.SettingsManager
+import com.example.spellingnotify.presentation.redux.AppState
+import com.example.spellingnotify.presentation.redux.Store
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,6 +25,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
+
+    @Provides
+    @Singleton
+    fun provideAppStateStore(): Store<AppState> {
+        return Store(AppState())
+    }
 
     @Singleton
     @Provides
@@ -41,11 +49,11 @@ class AppModule {
     @Provides
     fun provideNotificationHelper(
         app: Application,
-        settingsManager: SettingsManager,
+        store: Store<AppState>,
         repository: MainRepository,
         mainFilterUseCase: MainFilterUseCase
     ): NotificationHelper {
-        return NotificationHelper(app, settingsManager, repository, mainFilterUseCase)
+        return NotificationHelper(app, store, repository, mainFilterUseCase)
     }
 
     @Provides

@@ -14,6 +14,9 @@ data class MainState(
             green = (150..155).random(),
             blue = (70..200).random()
         )
-    }
+    },
+    val isLoading: Boolean = false,
+    val currentWordClicked: String? = null,
+    val wordsClicked: List<String> = listOf()
 )
 

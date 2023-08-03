@@ -5,7 +5,6 @@ interface SettingsManager {
     companion object{
         const val LEARNING_INTERVALS_LIST = "learningIntervalsList"
         const val EXERCISING_INTERVALS_LIST = "exercisingIntervalsList"
-        const val WORD_TO_GUESS = "wordToType"
         const val ARCHIVED_WORDS_LIST = "archivedWordsList"
         const val SCORE_BOARD_LIST = "scoreBoardList"
     }
