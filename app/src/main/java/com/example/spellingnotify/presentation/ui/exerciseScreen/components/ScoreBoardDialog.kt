@@ -9,10 +9,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ScoreBoardDialog(
     title: String,
@@ -36,13 +38,13 @@ fun ScoreBoardDialog(
             modifier = modifier
                 .fillMaxWidth(0.8f)
                 .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.surface)
+                .background(MaterialTheme.colors.surface)
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.body1,
                 modifier = Modifier.padding(bottom = 28.dp),
                 fontSize = 18.sp
             )
@@ -55,7 +57,7 @@ fun ScoreBoardDialog(
                 Text(
                     text = "Ok",
                     fontSize = 20.sp,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colors.primary,
                     modifier = Modifier.clickable { onOk() }
                 )
             }

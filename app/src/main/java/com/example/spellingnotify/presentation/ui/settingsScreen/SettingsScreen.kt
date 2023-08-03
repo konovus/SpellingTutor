@@ -1,10 +1,10 @@
 package com.example.spellingnotify.presentation.ui.settingsScreen
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Divider
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -27,7 +27,6 @@ import com.example.spellingnotify.presentation.ui.settingsScreen.components.isPe
 import com.example.spellingnotify.presentation.ui.settingsScreen.components.permissionLauncher
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
@@ -76,7 +75,7 @@ fun SettingsScreen(
         )
 
     Column {
-        Spacer(modifier = modifier.height(96.dp))
+        Spacer(modifier = modifier.height(24.dp))
         SettingsCustomOption(
             title = "Time interval for Learning",
             subTitleList = viewModel.settingsState.value.learningIntervalsList,

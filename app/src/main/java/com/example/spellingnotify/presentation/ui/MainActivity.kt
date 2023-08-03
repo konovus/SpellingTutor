@@ -17,15 +17,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -44,8 +42,9 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: SharedViewModel by viewModels()
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter",
+        "UnusedMaterialScaffoldPaddingParameter"
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -61,23 +60,20 @@ class MainActivity : ComponentActivity() {
                     Scaffold(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.primary)
+                            .background(MaterialTheme.colors.primary)
                             .statusBarsPadding()
                             .navigationBarsPadding()
                             .systemBarsPadding(),
                         topBar = {
                             TopAppBar(
-                                modifier = Modifier.background(MaterialTheme.colorScheme.primary),
                                 title = {
                                     Text(
                                         text = viewModel.topBarTitle.value,
-                                        color = MaterialTheme.colorScheme.onPrimary,
+                                        color = MaterialTheme.colors.onPrimary,
                                         fontWeight = FontWeight.Bold
                                     )
                                 },
-                                colors = TopAppBarDefaults.topAppBarColors(
-                                    containerColor = MaterialTheme.colorScheme.primary
-                                )
+                                backgroundColor = MaterialTheme.colors.primary
                             )
                         },
                         bottomBar = { BottomBar(navController = navController, viewModel) }

@@ -17,12 +17,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -79,7 +79,7 @@ fun ExerciseScreen(
 
     Column(
         modifier = modifier
-            .padding(vertical = 76.dp)
+            .padding(top = 20.dp, bottom = 76.dp)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = if (!state.isGameRunning)
@@ -188,7 +188,7 @@ private fun ShowGameIsRunningScreen(
         Timer(
             totalTime = 60L * 1000L,
             inactiveBarColor = Color.DarkGray,
-            activeBarColor = MaterialTheme.colorScheme.primary,
+            activeBarColor = MaterialTheme.colors.primary,
             modifier = Modifier.size(60.dp),
             viewModel = viewModel
         )
@@ -232,9 +232,9 @@ private fun ShowGameIsRunningScreen(
         onValueChange = {
             viewModel.evaluateWord(it)
         },
-        colors = OutlinedTextFieldDefaults.colors(
+        colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = if (state.isCorrect == null)
-                MaterialTheme.colorScheme.primary
+                MaterialTheme.colors.primary
             else if (state.isCorrect)
                 Success
             else Error,

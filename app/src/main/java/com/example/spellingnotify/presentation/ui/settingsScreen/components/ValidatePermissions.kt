@@ -16,11 +16,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
@@ -50,6 +51,7 @@ fun permissionLauncher(onResult: (Boolean) -> Unit): ManagedActivityResultLaunch
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PermissionDialog(
     description: String,
@@ -67,14 +69,14 @@ fun PermissionDialog(
         Column(
             modifier = modifier
                 .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.surface)
+                .background(MaterialTheme.colors.surface)
                 .padding(16.dp)
                 .fillMaxWidth(0.8f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "Permission required",
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.body1,
                 fontSize = 18.sp
             )
             Spacer(modifier = Modifier.height(30.dp))

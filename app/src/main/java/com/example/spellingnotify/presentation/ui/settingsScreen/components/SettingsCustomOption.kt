@@ -4,8 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -34,19 +34,19 @@ fun SettingsCustomOption(
             text = title,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = MaterialTheme.colors.onSurface,
         )
         if (subTitleList.isEmpty())
             Text(
                 text = emptyPlaceholder,
                 fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.9f)
+                color = MaterialTheme.colors.onSurface.copy(alpha = 0.9f)
             )
         subTitleList.forEach {
             Text(
                 text = it,
                 fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.9f)
+                color = MaterialTheme.colors.onSurface.copy(alpha = 0.9f)
             )
         }
     }

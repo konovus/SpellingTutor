@@ -19,7 +19,7 @@ class MainFilterUseCase @Inject constructor(
     private suspend fun checkForArchivedWords(filteredWords: List<WordModel>): List<WordModel> {
         val archivedWords =
             settingsManager.readStringListSetting(SettingsManager.ARCHIVED_WORDS_LIST)
-        return filteredWords.filterNot { archivedWords.contains(it.word) }
+        return filteredWords.filterNot { archivedWords.contains(it.word) }.toSet().toList()
     }
 
     private fun passThroughAllFilters(filters: List<WordsFilter>): List<WordModel> {

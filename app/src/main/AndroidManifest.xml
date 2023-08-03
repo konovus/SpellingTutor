@@ -13,6 +13,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.SpellingNotify"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="31">
         <provider
             android:name="androidx.startup.InitializationProvider"

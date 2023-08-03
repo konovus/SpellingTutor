@@ -9,16 +9,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.LocalMinimumTouchTargetEnforcement
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -29,7 +29,7 @@ import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.clock.ClockDialog
 import com.maxkeppeler.sheets.clock.models.ClockSelection
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TimeIntervalDialogContent(
     modifier: Modifier = Modifier,
@@ -56,7 +56,7 @@ fun TimeIntervalDialogContent(
     if (timeIntervalList.isEmpty())
         Text(
             text = emptyPlaceholder,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
+            color = MaterialTheme.colors.onSurface.copy(alpha = 0.85f),
             modifier = Modifier.padding(8.dp)
         )
     Column(
@@ -78,7 +78,7 @@ fun TimeIntervalDialogContent(
                         .padding(6.dp)
                 )
                 Spacer(modifier = Modifier.width(60.dp))
-                CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+                CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {
                     IconButton(onClick = {
                         intervalIndex = index
                         clockState.show()

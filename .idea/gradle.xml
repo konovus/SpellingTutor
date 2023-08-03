@@ -8,6 +8,7 @@
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleHome" value="$PROJECT_DIR$/../../Soft/AndroidStudioAll/more/.gradle/wrapper/dists/gradle-7.4-all/aadb4xli5jkdsnukm30eibyiu/gradle-7.4" />
+        <option name="gradleJvm" value="jbr-17" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />

@@ -2,13 +2,12 @@ package com.example.spellingnotify.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.spellingnotify.presentation.ui.SharedViewModel
 import com.example.spellingnotify.presentation.ui.exerciseScreen.ExerciseScreen
 import com.example.spellingnotify.presentation.ui.mainScreen.MainScreen
 import com.example.spellingnotify.presentation.ui.settingsScreen.SettingsScreen

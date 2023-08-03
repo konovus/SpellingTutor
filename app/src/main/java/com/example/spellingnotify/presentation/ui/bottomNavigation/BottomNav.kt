@@ -9,9 +9,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -42,7 +42,7 @@ fun BottomBar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary)
+                .background(MaterialTheme.colors.primary)
                 .padding(horizontal = 20.dp, vertical = 14.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -75,7 +75,7 @@ fun AddItem(
 ) {
     val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
     val background =
-        if (selected) MaterialTheme.colorScheme.onPrimary else GrayLighter
+        if (selected) MaterialTheme.colors.onPrimary else GrayLighter
     val contentColor =
         if (selected) Color.White else Color.Black
 

@@ -61,12 +61,10 @@ class ExerciseViewModel @Inject constructor(
     }
 
     fun endGame() = viewModelScope.launch {
+        if (state.value.isEndGame) return@launch
+        state.value = state.value.copy(isEndGame = true, isGameRunning = false)
         val updatedList = updateScoreBoardPreferences()
-        state.value = state.value.copy(
-            isGameRunning = false,
-            isEndGame = true,
-            scoreBoardList = updatedList.sortedByDescending { ScoreBoardRow.getScore(it) }
-        )
+        state.value = state.value.copy(scoreBoardList = updatedList.sortedByDescending { ScoreBoardRow.getScore(it) })
     }
 
     private suspend fun updateScoreBoardPreferences(): MutableList<String> {

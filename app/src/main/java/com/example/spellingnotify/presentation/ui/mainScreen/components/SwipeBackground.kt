@@ -6,16 +6,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissState
+import androidx.compose.material.DismissValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Archive
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Unarchive
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissState
-import androidx.compose.material3.DismissValue
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -24,7 +22,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SwipeBackground(dismissState: DismissState) {
     val direction = dismissState.dismissDirection ?: return
